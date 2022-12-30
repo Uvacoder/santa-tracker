@@ -13,7 +13,7 @@ const DEFAULT_CENTER = [38.907132, -77.036546]
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
 export default function Home() {
-  const { data } = useSWR(
+  const { data, error  } = useSWR(
     'https://firebasestorage.googleapis.com/v0/b/santa-tracker-firebase.appspot.com/o/route%2Fsanta_en.json?alt=media&2018b',
     fetcher
   );
@@ -22,6 +22,14 @@ export default function Home() {
 
   const currentDate = new Date(Date.now());
   const currentYear = currentDate.getFullYear();
+  
+  if (error) {
+        return <p>Fail to Load.</p>
+    }
+    if (!data && !destinations) {
+        return <p>Loading...</p>
+    }
+      
 
   const destinations = data?.destinations.map((destination) => {
     const { arrival, departure } = destination;
